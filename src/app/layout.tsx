@@ -1,22 +1,27 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "@/styles/globals.css";
+import type { Metadata } from 'next';
+import { ThemeProvider } from '@mui/material';
 
-const inter = Inter({ subsets: ["latin"] });
+import { Inter } from 'next/font/google';
+import '@styles/globals.css';
+
+import theme from '@theme';
+import { TaskProvider } from '@store';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-    title: "Task Management",
-    description: "Empower Your Productivity: Where Tasks Meet Efficiency",
+  title: 'Task Management',
+  description: 'Empower Your Productivity: Where Tasks Meet Efficiency',
 };
 
-export default function RootLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    return (
-        <html lang="en">
-            <body className={inter.className}>{children}</body>
-        </html>
-    );
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <ThemeProvider theme={theme}>
+        <TaskProvider>
+          <body className={inter.className}>{children}</body>
+        </TaskProvider>
+      </ThemeProvider>
+    </html>
+  );
 }
