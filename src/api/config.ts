@@ -2,10 +2,9 @@ import { createServer } from 'miragejs';
 import { endpoints } from './endpoints';
 import { models } from './models';
 import { factories } from './factories';
-import { localStorageHelper } from '@utils/local-storage';
 
 export function startMirage() {
-  const dbData = localStorageHelper?.get('miragedb');
+  const dbData = localStorage.getItem('miragedb');
   const server = createServer({
     models,
     factories,
@@ -19,7 +18,7 @@ export function startMirage() {
   if (server.pretender?.handledRequest) {
     server.pretender.handledRequest = function (verb, path, request) {
       if (!['get', 'head'].includes(verb.toLowerCase())) {
-        localStorageHelper.set('miragedb', JSON.stringify(server.db.dump()));
+        localStorage.setItem('miragedb', JSON.stringify(server.db.dump()));
       }
     };
   }

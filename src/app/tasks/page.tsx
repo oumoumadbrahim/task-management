@@ -13,7 +13,9 @@ import { useTaskActions } from '@store';
 import { ITask } from '@api/types';
 import server from '@api';
 
-server();
+if (typeof window !== 'undefined') {
+  server();
+}
 
 export default function TasksPage() {
   //prettier-ignore
@@ -38,11 +40,9 @@ export default function TasksPage() {
   }
 
   React.useEffect(() => {
-    return () => {
-      fetchData().then(data => {
-        loadTasks(data.tasks);
-      });
-    };
+    fetchData().then(data => {
+      loadTasks(data.tasks);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

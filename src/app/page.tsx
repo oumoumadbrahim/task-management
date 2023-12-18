@@ -4,10 +4,6 @@ import React from 'react';
 import { Box, Button, Container, Typography } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 
-import server from '@api';
-
-server();
-
 export default function HomePage() {
   return (
     <Container maxWidth="lg">
