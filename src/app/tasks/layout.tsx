@@ -10,10 +10,6 @@ import { taskResolver } from '@utils/yup-schema';
 
 import { useTaskActions } from '@store';
 
-import server from '@api';
-
-server();
-
 function HeadTitle() {
   const { state } = useTaskActions();
   return (

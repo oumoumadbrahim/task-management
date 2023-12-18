@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Alert, Box, CircularProgress, Grid } from '@mui/material';
+import { useFormContext } from 'react-hook-form';
+import { Alert, Box, Button, CircularProgress, Grid, Typography } from '@mui/material';
 
 import Task from '@components/task';
 import StatusTab from '@components/status-tab';
@@ -17,7 +18,11 @@ server();
 export default function TasksPage() {
   //prettier-ignore
   const {state: { loading, error },fetchData} = useMyFetch<{ action: 'add'|'edit', tasks: ITask[] }>({ url: '/api/tasks', method: 'GET' });
-  const { state, loadTasks } = useTaskActions();
+  const { state, loadTasks, openTaskForm } = useTaskActions();
+  const { setValue } = useFormContext<{
+    action: 'add' | 'edit';
+    task: ITask;
+  }>();
 
   const filteredTasks = state?.tasks.filter(task => {
     if (state.selectedStatus !== 'all') {
@@ -26,6 +31,11 @@ export default function TasksPage() {
       return true;
     }
   });
+
+  function onOpenModal() {
+    openTaskForm(true);
+    setValue('action', 'add');
+  }
 
   React.useEffect(() => {
     return () => {
@@ -58,17 +68,34 @@ export default function TasksPage() {
     return null;
   }
 
+  function Tasks() {
+    if (filteredTasks.length > 0) {
+      return filteredTasks?.map(task => <Task key={task.id} {...task} />);
+    } else if (!loading) {
+      return (
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          <Typography variant="h3" textAlign="center" paddingTop={2} paddingBottom={2}>
+            No Task!
+          </Typography>
+          <Button
+            variant="outlined"
+            size="small"
+            style={{ alignSelf: 'center' }}
+            onClick={onOpenModal}>
+            Add New Task
+          </Button>
+        </Box>
+      );
+    }
+  }
+
   return (
     <>
       <StatusTab />
-
       <Grid container display="flex" direction="column" rowGap={1}>
         <Error />
         <Loading />
-
-        {filteredTasks?.map(task => (
-          <Task key={task.id} {...task} />
-        ))}
+        <Tasks />
       </Grid>
     </>
   );
